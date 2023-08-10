@@ -15,9 +15,9 @@ public class BookRepository : GenericRepository<int, Book, AppDbContext>,IBookRe
     public async Task<Book> GetBook(Book book)
     {
         var discounts = _context.Discounts.AsQueryable();
-        discounts = discounts.Where(a => a.BookId != null && a.BookId == book.Id);
-        discounts = discounts.Where(b => b.PublisherId != null && b.PublisherId == book.PublisherId);
-        discounts = discounts.Where(c => c.AuthorId != null && c.AuthorId == book.AuthorId);
+        discounts = discounts.Where(a =>  a.BookId == book.Id || a.PublisherId == book.PublisherId || a.AuthorId == book.AuthorId);
+        //discounts = discounts.Where(b => b.PublisherId != null && b.PublisherId == book.PublisherId);
+        //discounts = discounts.Where(c => c.AuthorId != null && c.AuthorId == book.AuthorId);
         var discountList = await discounts.ToListAsync();
         var discountMax = discounts.Select(s => s.Percantage).Max();
         book.Price =(100 - discountMax)*book.Price/100;
